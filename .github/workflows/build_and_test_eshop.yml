@@ -2,6 +2,7 @@ name: Build and tests our eshop
 
 on:
   workflow_dispatch:
+  push:
 
 jobs:
   Install:
@@ -54,3 +55,28 @@ jobs:
           run: |
             npm rebuild node-sass --force
             npm run build -- --colors
+
+  Test:
+        needs: Install
+        runs-on: ubuntu-latest
+
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v4.1.1
+            with:
+              token: ${{ secrets.WORKFLOW_TOKEN }}
+
+          - name: Setup Node.js environment
+            uses: actions/setup-node@v4.0.2
+            with:
+              node-version: 14
+
+          - name: Cache
+            uses: actions/cache@v4.0.2
+            with:
+              path: node_modules
+              key: node_modules-${{ hashFiles('**/package-lock.json') }}
+
+          - name: Run tests
+            run: |
+              npm run test -- --colors
