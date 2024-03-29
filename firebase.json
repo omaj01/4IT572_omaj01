@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "omaj01-devops2",
     "public": "build",
     "ignore": [
       "firebase.json",
